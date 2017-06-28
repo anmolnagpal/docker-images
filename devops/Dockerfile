@@ -4,11 +4,15 @@ MAINTAINER Anmol Nagpal <ianmolnagpal@gmail.com>
 
 #####################################
 ENV PHP_MAJOR 7.1
+ENV PACKER_MAJOR 1.0
+ENV TERRAFORM_MAJOR 0.9
+
 ENV PHP_VERSION 7.1.6
-ENV TERRAFORM_VERSION 0.9.9
 ENV PACKER_VERSION 1.0.2
+ENV TERRAFORM_VERSION 0.9.9
 ENV DEBIAN_FRONTEND noninteractive
 ####################################
+
 #PHP
 RUN export LANG=C.UTF-8 && export LC_ALL=en_US.UTF-8
 RUN add-apt-repository ppa:ondrej/php && apt-get update
@@ -40,33 +44,32 @@ RUN apt-get install -y          \
     libsslcommon2-dev
 
 RUN phpenmod mongodb mcrypt soap curl amqp
+
 #Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
 #Ruby
 RUN apt-get install ruby-full -y
+
 #Python with Packages
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
 RUN pip3 install --upgrade pip
+
 # Ansible
 RUN pip3 install ansible
+
 # AWS-CLI
 RUN pip3 install awscli
 
-###########
-#Terraform#
-###########
-
+#Terraform
 RUN apt-get update && \
     apt-get install bash ca-certificates git openssl unzip wget -y && \
     cd /tmp && \
     wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin
 
-########
-#Packer#
-########
-
+#Packer
 RUN cd /tmp && \
     wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
     unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/bin
