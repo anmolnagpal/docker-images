@@ -38,6 +38,8 @@ RUN phpenmod mongodb mcrypt soap curl amqp
 #Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+#Ruby
+RUN apt-get install ruby-full -y
 #Python with Packages
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y python3-pip
