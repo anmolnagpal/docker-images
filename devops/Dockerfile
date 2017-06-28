@@ -38,6 +38,14 @@ RUN phpenmod mongodb mcrypt soap curl amqp
 #Composer
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+#Python with Packages
+RUN apt-get update && apt-get upgrade -y
+RUN apt-get install -y python3-pip
+RUN pip3 install --upgrade pip
+# Ansible
+RUN pip3 install ansible
+# AWS-CLI
+RUN pip3 install awscli
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
