@@ -52,13 +52,21 @@ RUN pip3 install --upgrade pip
 RUN pip3 install ansible
 # AWS-CLI
 RUN pip3 install awscli
-#Terraform
+
+###########
+#Terraform#
+###########
+
 RUN apt-get update && \
     apt-get install bash ca-certificates git openssl unzip wget -y && \
     cd /tmp && \
     wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin
-#Packer
+
+########
+#Packer#
+########
+
 RUN cd /tmp && \
     wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
     unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/bin
