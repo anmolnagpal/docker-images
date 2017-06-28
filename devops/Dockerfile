@@ -4,6 +4,7 @@ MAINTAINER Anmol Nagpal <ianmolnagpal@gmail.com>
 # PHP
 ENV PHP_MAJOR 7.1
 ENV PHP_VERSION 7.1.6
+ENV TERRAFORM_VERSION 0.9.9
 ENV DEBIAN_FRONTEND noninteractive
 RUN export LANG=C.UTF-8 && export LC_ALL=en_US.UTF-8
 RUN add-apt-repository ppa:ondrej/php && apt-get update
@@ -48,7 +49,14 @@ RUN pip3 install --upgrade pip
 RUN pip3 install ansible
 # AWS-CLI
 RUN pip3 install awscli
+#Terraform
+RUN apt-get update && \
+    apt-get install bash ca-certificates git openssl unzip wget -y && \
+    cd /tmp && \
+    wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
+    unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin
+
 
 # Clean up APT when done.
-RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/ /var/cache/apk/**
 WORKDIR /var/www
