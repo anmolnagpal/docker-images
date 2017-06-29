@@ -16,12 +16,15 @@ ENV TERRAFORM_VERSION 0.9.9
 ENV DEBIAN_FRONTEND noninteractive
 ####################################
 
+#password less ssh
+ADD ./etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
+ADD ./etc/ssh/ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
+
 #User
 RUN useradd ubuntu
 RUN passwd -d ubuntu
 RUN passwd -d root
-RUN echo "PermitEmptyPasswords yes" >> /etc/ssh/sshd_config
-RUN echo "ubuntu ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN chmod 600 /etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key.pub && echo "PermitEmptyPasswords yes" >> /etc/ssh/sshd_config && echo "ubuntu ALL=(ALL) NOPASSWD:ALL" >> /etc/sudoers
 RUN echo "ChallengeResponseAuthentication no" >> /etc/ssh/sshd_config
 RUN echo "PubkeyAuthentication yes" >> /etc/ssh/sshd_config
 RUN chsh -s `which bash` ubuntu
@@ -31,6 +34,13 @@ RUN mkdir -p /home/ubuntu/.ssh
 RUN chmod 755 /home/ubuntu/.ssh
 RUN chown -R ubuntu:ubuntu /home/ubuntu
 RUN chmod 755 /home/ubuntu
+ENV BOOT2DOCKER_ID 501
+ENV BOOT2DOCKER_GID 20
+# Tweaks to give write permissions to the app
+RUN usermod -u ${BOOT2DOCKER_ID} ubuntu && \
+    usermod -G staff ubuntu
+RUN groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && groupmod -g ${BOOT2DOCKER_GID} staff
+
 
 #General
 RUN apt-get update && apt-get upgrade -y
