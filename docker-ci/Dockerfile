@@ -44,7 +44,17 @@ RUN apt-get install -y      \
 	haskell-platform       \
 	libssl-dev
 
+
+# DockerLint
+RUN curl -sL https://deb.nodesource.com/setup_10.x | bash -
+RUN apt-get install -y          \
+    nodejs                      \
+    && npm install npm@latest -g
+RUN npm install -g dockerlint
+
 RUN wget -qO- https://get.haskellstack.org/ | sh
+RUN cd /tmp && \
+    git clone https://github.com/hadolint/hadolint && cd hadolint && stack install
 #PHP
 RUN add-apt-repository ppa:ondrej/php && apt-get update
 RUN apt-get install -y          \
