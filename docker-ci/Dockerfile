@@ -81,7 +81,8 @@ RUN pip  install ansible==${ANSIBLE_VERSION} \
                  mongotail \
                  bumpversion \
                  pip \
-                 yamllint
+                 yamllint \
+                 ansigenome
 
 #Terraform
 RUN cd /tmp && \
