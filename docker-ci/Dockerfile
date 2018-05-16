@@ -80,7 +80,7 @@ RUN pip  install ansible==${ANSIBLE_VERSION} \
                  yamllint \
                  ansigenome
 
-ADD ./config/ansigenome.conf   $HOME/.ansigenome.conf
+ADD ./config/ansigenome.conf  /root/.ansigenome.conf
 
 #Terraform
 RUN cd /tmp && \
