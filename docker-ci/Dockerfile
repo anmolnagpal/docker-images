@@ -80,6 +80,8 @@ RUN pip  install ansible==${ANSIBLE_VERSION} \
                  yamllint \
                  ansigenome
 
+ADD ./config/ansigenome.conf   $HOME/.ansigenome.conf
+
 #Terraform
 RUN cd /tmp && \
     wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
