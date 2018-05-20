@@ -1,12 +1,12 @@
 # Dockerfile
 
 # Pull base image.
-FROM php:7.2.3-fpm
+FROM php:7.2.5-fpm
 
 MAINTAINER Anmol Nagpal <ianmolnagpal@gmail.com>
 # http://php.net/downloads.php
 ENV PHP_MAJOR 7.2
-ENV PHP_VERSION 7.2.3
+ENV PHP_VERSION 7.2.5
 ENV DEBIAN_FRONTEND noninteractive
 RUN export LANG=C.UTF-8 && export LC_ALL=en_US.UTF-8
 
