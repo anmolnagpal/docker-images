@@ -3,7 +3,7 @@
 docker build -t anmolnagpal/grafana:4.3.1 .
 
 if [[ $? != 0 ]]; then
-    echo "mmonit Build failed."
+    echo "Grafana Build failed."
     exit 1
 fi
 
