@@ -47,6 +47,7 @@ RUN groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | 
 
 
 #General
+RUN apt-get remove -y python3
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y      \
 	curl                   \
@@ -80,6 +81,7 @@ RUN su - ubuntu -c "sh /home/ubuntu/install-zsh.sh"
 RUN rm /root/.zshrc && chsh -s `which zsh` && chsh -s `which zsh` ubuntu && chmod -R 755 /usr/local/share/zsh*
 
 #PHP
+RUN apt-get install -y software-properties-common
 RUN add-apt-repository ppa:ondrej/php && apt-get update
 RUN apt-get install -y          \
     php7.2                      \
@@ -98,7 +100,7 @@ RUN phpenmod curl
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ##Python with Packages
-RUN pip3 install ansible==${ANSIBLE_VERSION} \
+RUN pip install ansible==${ANSIBLE_VERSION} \
                  ansible-lint==${LINT_VERSION} \
                  ansible-review==${REVIEW_VERSION} \
                  awscli \
