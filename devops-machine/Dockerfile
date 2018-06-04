@@ -13,10 +13,10 @@ ENV ANSIBLE_MAJOR 2.5.3
 ENV LINT_VERSION 3.5.0rc1
 ENV REVIEW_VERSION 0.13.4
 ###
-ENV PHP_VERSION 7.2.5
-ENV PACKER_VERSION 1.2.3
+ENV PHP_VERSION 7.2.6
+ENV PACKER_VERSION 1.2.4
 ENV TERRAFORM_VERSION 0.11.7
-ENV ANSIBLE_VERSION 2.5.2
+ENV ANSIBLE_VERSION 2.5.3
 ENV DEBIAN_FRONTEND noninteractive
 ####################################
 
@@ -74,6 +74,8 @@ RUN apt-get install -y      \
 # ZSH
 ADD ./etc/install-zsh.sh /root/install-zsh.sh
 ADD ./etc/install-zsh.sh /home/ubuntu/install-zsh.sh
+ADD ./etc/scripts/ssh /usr/local/bin/connect
+ADD ./etc/scripts/ansible /usr/local/bin/deploy
 RUN chmod +x /root/install-zsh.sh
 RUN chmod +x /home/ubuntu/install-zsh.sh
 RUN sh /root/install-zsh.sh

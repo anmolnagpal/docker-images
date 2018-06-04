@@ -1,0 +1,35 @@
+#!/usr/bin/env bash
+#
+# This script is used to deploy playbook
+#
+##########
+#Variable#
+##########
+HOME=/var/www
+DEVOPS_HOME=$HOME/devops/playbook/
+HCN_HOME=$HOME/hcn-devops/playbook/
+FCN_HOME=$HOME/fcn-devops/playbook/
+DWH_HOME=$HOME/dwh-devops/playbook/
+DEV_HOME=$HOME/dev-devops/playbook/
+
+############
+if [ "$1" == "devops" ]; then
+     cd $DEVOPS_HOME && ansible-playbook   "$2" --tags="$3"
+    # Dev  Project
+elif [ "$1" == "dev" ]; then
+     cd $DEV_HOME && ansible-playbook   "$2" --tags="$3"
+    # DataWare House Connect Project
+elif [ "$1" == "dwh" ]; then
+     cd $DWH_HOME && ansible-playbook   "$2" --tags="$3"
+    # Ambari Project
+elif [ "$1" == "amrabi" ]; then
+     cd $DEVOPS_HOME && ansible-playbook   "$2" --tags="$3"
+    # Flight Connect Project
+elif [ "$1" == "fcn" ]; then
+     cd $FCN_HOME && ansible-playbook   "$2" --tags="$3"
+    # Hotel Connect Project
+elif [ "$1" == "hcn" ]; then
+     cd $HCN_HOME && ansible-playbook   "$2" --tags="$3"
+else
+echo  -e  "Usage: <command> <env> <playbook> <tags> \n   eg. deploy devops dev-api-config.yml common"
+fi
