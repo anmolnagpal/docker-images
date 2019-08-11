@@ -42,6 +42,7 @@ RUN usermod -u ${BOOT2DOCKER_ID} ubuntu && \
     usermod -G staff ubuntu
 RUN groupmod -g $(($BOOT2DOCKER_GID + 10000)) $(getent group $BOOT2DOCKER_GID | cut -d: -f1) && groupmod -g ${BOOT2DOCKER_GID} staff
 
+RUN add-apt-repository ppa:longsleep/golang-backports
 
 #General
 RUN apt-get remove -y python3
@@ -66,7 +67,9 @@ RUN apt-get install -y      \
 	yamllint               \
 	inetutils-ping         \
 	telnet                 \
+	golang-go              \
 	libssl-dev
+
 
 # ZSH
 ADD ./etc/install-zsh.sh /root/install-zsh.sh
@@ -89,7 +92,7 @@ RUN pip install ansible==${ANSIBLE_VERSION} \
                  bumpversion \
                  pip \
                  yamllint
-
+	
 #Terraform
 RUN cd /tmp && \
     wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
