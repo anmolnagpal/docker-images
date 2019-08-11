@@ -7,11 +7,13 @@ ENV LANG C.UTF-8
 ENV LC_ALL en_US.UTF-8
 
 ###
-ENV PHP_VERSION 7.3.7
+ENV PHP_VERSION 7.3
 ENV PACKER_VERSION 1.4.2
 ENV TERRAFORM_VERSION 0.12.6
 ENV ANSIBLE_VERSION 2.8.3
 ENV LINT_VERSION 4.1.0
+ENV KUBECTL_VERSION 1.15.0
+ENV HELM_VERSION 2.14.3
 ENV DEBIAN_FRONTEND noninteractive
 ####################################
 
@@ -78,22 +80,6 @@ RUN rm /root/.zshrc && chsh -s `which zsh` && chsh -s `which zsh` ubuntu && chmo
 
 #PHP
 RUN apt-get install -y software-properties-common
-RUN add-apt-repository ppa:ondrej/php && apt-get update
-RUN apt-get install -y                     \
-    php${PHP_VERSION}                      \
-    php${PHP_VERSION}-common               \
-    php${PHP_VERSION}-cli                  \
-    php${PHP_VERSION}-curl                 \
-    php${PHP_VERSION}-json                 \
-    php${PHP_VERSION}-bz2                  \
-    php${PHP_VERSION}-xml                  \
-    php${PHP_VERSION}-zip                  \
-    pkg-config
-
-RUN phpenmod curl
-
-#Composer
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
 ##Python with Packages
 RUN pip install ansible==${ANSIBLE_VERSION} \
@@ -113,6 +99,18 @@ RUN cd /tmp && \
 RUN cd /tmp && \
     wget https://releases.hashicorp.com/packer/${PACKER_VERSION}/packer_${PACKER_VERSION}_linux_amd64.zip && \
     unzip packer_${PACKER_VERSION}_linux_amd64.zip -d /usr/bin
+
+#Kubectl
+RUN cd /usr/bin && \
+    curl -LO https://storage.googleapis.com/kubernetes-release/release/v${KUBECTL_VERSION}/bin/linux/amd64/kubectl && \
+    chmod +x ./kubectl
+
+#Helm
+RUN cd /tmp && \
+    wget https://get.helm.sh/helm-v${HELM_VERSION}-linux-amd64.tar.gz && \
+    tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz && \
+    mv linux-amd64/helm /usr/bin/ && \
+    mv linux-amd64/tiller /usr/bin/
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/ /var/cache/apk/**
