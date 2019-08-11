@@ -1,22 +1,17 @@
 # Pull base image.
 FROM phusion/baseimage:0.10.1
-MAINTAINER Anmol Nagpal <ianmolnagpal@gmail.com>
+MAINTAINER Anmol Nagpal <anmol@clouddrove.com>
 
 #####################################
 ENV LANG C.UTF-8
 ENV LC_ALL en_US.UTF-8
 
-ENV PHP_MAJOR 7.2
-ENV PACKER_MAJOR 1.2
-ENV TERRAFORM_MAJOR 0.11
-ENV ANSIBLE_MAJOR 2.5
-ENV LINT_VERSION 3.5.0rc1
-ENV REVIEW_VERSION 0.13.4
 ###
-ENV PHP_VERSION 7.2.6
-ENV PACKER_VERSION 1.2.4
-ENV TERRAFORM_VERSION 0.11.7
-ENV ANSIBLE_VERSION 2.5.4
+ENV PHP_VERSION 7.3.7
+ENV PACKER_VERSION 1.4.2
+ENV TERRAFORM_VERSION 0.12.6
+ENV ANSIBLE_VERSION 2.8.3
+ENV LINT_VERSION 4.1.0
 ENV DEBIAN_FRONTEND noninteractive
 ####################################
 
@@ -74,8 +69,7 @@ RUN apt-get install -y      \
 # ZSH
 ADD ./etc/install-zsh.sh /root/install-zsh.sh
 ADD ./etc/install-zsh.sh /home/ubuntu/install-zsh.sh
-ADD ./etc/scripts/ssh /usr/local/bin/connect
-ADD ./etc/scripts/ansible /usr/local/bin/deploy
+
 RUN chmod +x /root/install-zsh.sh
 RUN chmod +x /home/ubuntu/install-zsh.sh
 RUN sh /root/install-zsh.sh
@@ -85,15 +79,15 @@ RUN rm /root/.zshrc && chsh -s `which zsh` && chsh -s `which zsh` ubuntu && chmo
 #PHP
 RUN apt-get install -y software-properties-common
 RUN add-apt-repository ppa:ondrej/php && apt-get update
-RUN apt-get install -y          \
-    php7.2                      \
-    php7.2-common               \
-    php7.2-cli                  \
-    php7.2-curl                 \
-    php7.2-json                 \
-    php7.2-bz2                  \
-    php7.2-xml                  \
-    php7.2-zip                  \
+RUN apt-get install -y                     \
+    php${PHP_VERSION}                      \
+    php${PHP_VERSION}-common               \
+    php${PHP_VERSION}-cli                  \
+    php${PHP_VERSION}-curl                 \
+    php${PHP_VERSION}-json                 \
+    php${PHP_VERSION}-bz2                  \
+    php${PHP_VERSION}-xml                  \
+    php${PHP_VERSION}-zip                  \
     pkg-config
 
 RUN phpenmod curl
@@ -104,7 +98,6 @@ RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local
 ##Python with Packages
 RUN pip install ansible==${ANSIBLE_VERSION} \
                  ansible-lint==${LINT_VERSION} \
-                 ansible-review==${REVIEW_VERSION} \
                  awscli \
                  mongotail \
                  bumpversion \
@@ -123,7 +116,7 @@ RUN cd /tmp && \
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/ /var/cache/apk/**
-WORKDIR /var/www
+WORKDIR /home/ubuntu/workspace
 
 # Define default command.
 EXPOSE 22
