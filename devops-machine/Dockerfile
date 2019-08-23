@@ -9,9 +9,7 @@ ENV LC_ALL en_US.UTF-8
 ###
 ENV PHP_VERSION 7.3
 ENV PACKER_VERSION 1.4.2
-ENV TERRAFORM11_VERSION 0.11.14
 ENV TERRAFORM_VERSION 0.12.6
-ENV COMPOSE_VERSION 1.22.0
 ENV ANSIBLE_VERSION 2.8.3
 ENV LINT_VERSION 4.1.0
 ENV KUBECTL_VERSION 1.15.0
@@ -95,12 +93,6 @@ RUN pip install ansible==${ANSIBLE_VERSION} \
                  pip \
                  yamllint \
                  molecule
-
-#Terraform 0.11
-RUN cd /tmp && \
-    wget https://releases.hashicorp.com/terraform/${TERRAFORM11_VERSION}/terraform_${TERRAFORM11_VERSION}_linux_amd64.zip && \
-   	unzip terraform_${TERRAFORM11_VERSION}_linux_amd64.zip && \ 
-    mv terraform /usr/bin/tf
 
 #Terraform 0.12
 RUN cd /tmp && \
