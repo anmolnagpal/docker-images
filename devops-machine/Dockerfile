@@ -9,7 +9,9 @@ ENV LC_ALL en_US.UTF-8
 ###
 ENV PHP_VERSION 7.3
 ENV PACKER_VERSION 1.4.2
+ENV TERRAFORM11_VERSION 0.11.14
 ENV TERRAFORM_VERSION 0.12.6
+ENV COMPOSE_VERSION 1.22.0
 ENV ANSIBLE_VERSION 2.8.3
 ENV LINT_VERSION 4.1.0
 ENV KUBECTL_VERSION 1.15.0
@@ -49,7 +51,7 @@ RUN apt-get remove -y python3
 RUN apt-get update && apt-get upgrade -y
 RUN apt-get install -y      \
 	curl                   \
-	git                    \
+	git         		   \
 	zip                    \
 	unzip                  \
 	vim                    \
@@ -68,8 +70,8 @@ RUN apt-get install -y      \
 	inetutils-ping         \
 	telnet                 \
 	golang-go              \
-	libssl-dev
-
+	libssl-dev			   \
+	make
 
 # ZSH
 ADD ./etc/install-zsh.sh /root/install-zsh.sh
@@ -91,12 +93,20 @@ RUN pip install ansible==${ANSIBLE_VERSION} \
                  mongotail \
                  bumpversion \
                  pip \
-                 yamllint
-	
-#Terraform
+                 yamllint \
+                 molecule
+
+#Terraform 0.11
+RUN cd /tmp && \
+    wget https://releases.hashicorp.com/terraform/${TERRAFORM11_VERSION}/terraform_${TERRAFORM11_VERSION}_linux_amd64.zip && \
+   	unzip terraform_${TERRAFORM11_VERSION}_linux_amd64.zip && \ 
+    mv terraform /usr/bin/tf
+
+#Terraform 0.12
 RUN cd /tmp && \
     wget https://releases.hashicorp.com/terraform/${TERRAFORM_VERSION}/terraform_${TERRAFORM_VERSION}_linux_amd64.zip && \
     unzip terraform_${TERRAFORM_VERSION}_linux_amd64.zip -d /usr/bin
+
 
 #Packer
 RUN cd /tmp && \
@@ -114,6 +124,10 @@ RUN cd /tmp && \
     tar -zxvf helm-v${HELM_VERSION}-linux-amd64.tar.gz && \
     mv linux-amd64/helm /usr/bin/ && \
     mv linux-amd64/tiller /usr/bin/
+
+RUN go get -u github.com/remind101/assume-role 
+RUN go get github.com/stretchr/testify/assert github.com/gruntwork-io/terratest/modules/terraform
+
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/ /var/cache/apk/**
