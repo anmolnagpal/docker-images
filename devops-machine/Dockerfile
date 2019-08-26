@@ -15,6 +15,8 @@ ENV LINT_VERSION 4.1.0
 ENV KUBECTL_VERSION 1.15.0
 ENV HELM_VERSION 2.14.3
 ENV DEBIAN_FRONTEND noninteractive
+ENV GOBIN /home/ubuntu/go/bin
+ENV PATH /home/ubuntu/go/bin:$PATH
 ####################################
 
 #password less ssh
@@ -91,8 +93,7 @@ RUN pip install ansible==${ANSIBLE_VERSION} \
                  mongotail \
                  bumpversion \
                  pip \
-                 yamllint \
-                 molecule
+                 yamllint
 
 #Terraform 0.12
 RUN cd /tmp && \
@@ -117,8 +118,9 @@ RUN cd /tmp && \
     mv linux-amd64/helm /usr/bin/ && \
     mv linux-amd64/tiller /usr/bin/
 
-RUN go get -u github.com/remind101/assume-role 
-RUN go get github.com/stretchr/testify/assert github.com/gruntwork-io/terratest/modules/terraform
+RUN go get -u github.com/remind101/assume-role
+RUN mv /home/ubuntu/go/bin/assume-role /usr/bin/
+
 
 
 # Clean up APT when done.
