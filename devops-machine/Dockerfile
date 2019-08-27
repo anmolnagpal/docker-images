@@ -20,8 +20,9 @@ ENV PATH /home/ubuntu/go/bin:$PATH
 ####################################
 
 #password less ssh
-ADD ./etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
-ADD ./etc/ssh/ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
+ADD ./rootfs/etc/ssh/ssh_host_rsa_key /etc/ssh/ssh_host_rsa_key
+ADD ./rootfs/etc/ssh/ssh_host_rsa_key.pub /etc/ssh/ssh_host_rsa_key.pub
+ADD ./rootfs /home/ubuntu/rootfs/
 
 #User
 RUN useradd ubuntu
@@ -74,8 +75,8 @@ RUN apt-get install -y      \
 	make
 
 # ZSH
-ADD ./etc/install-zsh.sh /root/install-zsh.sh
-ADD ./etc/install-zsh.sh /home/ubuntu/install-zsh.sh
+ADD ./rootfs/etc/install-zsh.sh /root/install-zsh.sh
+ADD ./rootfs/etc/install-zsh.sh /home/ubuntu/install-zsh.sh
 
 RUN chmod +x /root/install-zsh.sh
 RUN chmod +x /home/ubuntu/install-zsh.sh
@@ -120,8 +121,8 @@ RUN cd /tmp && \
 
 RUN go get -u github.com/remind101/assume-role
 RUN mv /home/ubuntu/go/bin/assume-role /usr/bin/
-
-
+RUN go get github.com/hairyhenderson/gomplate/cmd/gomplate
+RUN mv /home/ubuntu/go/bin/gomplate /usr/bin/
 
 # Clean up APT when done.
 RUN apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/ /var/cache/apk/**
